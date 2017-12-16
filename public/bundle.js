@@ -50914,7 +50914,7 @@ var TodoApp = function (_React$Component) {
           { className: 'grid-x align-center' },
           React.createElement(
             'div',
-            { className: 'cell small-11 medium-6 large-5' },
+            { className: 'cell small-11 medium-8 large-6' },
             React.createElement(
               'div',
               { className: 'container' },

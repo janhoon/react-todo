@@ -63,7 +63,7 @@ class TodoApp extends React.Component {
       <div>
         <h1 className="page-title">TodoApp</h1>
         <div className="grid-x align-center">
-          <div className="cell small-11 medium-6 large-5">
+          <div className="cell small-11 medium-8 large-6">
             <div className="container">
               <TodoSearch onSearch={this.handleSearch}/>
               <TodoList todos={filteredTodos} onToggle={this.handleToggle}/>
