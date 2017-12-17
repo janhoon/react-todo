@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var {Provider} = require('react-redux')
 
 var TodoApp = require('TodoApp');
 
@@ -10,15 +11,13 @@ store.subscribe(() => {
   console.log('New State:', store.getState());
 });
 
-store.dispatch(actions.addTodo('Go for a run'));
-store.dispatch(actions.setSearchText('run'));
-store.dispatch(actions.toggleShowCompleted());
-
 $(document).foundation();
 
 require('style-loader!css-loader!sass-loader!applicationStyles');
 
 ReactDOM.render(
-  <TodoApp/>,
+  <Provider store={store}>
+    <TodoApp/>
+  </Provider>,
   document.getElementById('app')
 );
