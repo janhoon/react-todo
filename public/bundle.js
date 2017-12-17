@@ -20000,6 +20000,13 @@ var addTodo = exports.addTodo = function addTodo(text) {
   };
 };
 
+var addTodos = exports.addTodos = function addTodos(todos) {
+  return {
+    type: 'ADD_TODOS',
+    todos: todos
+  };
+};
+
 var toggleTodo = exports.toggleTodo = function toggleTodo(id) {
   return {
     type: 'TOGGLE_TODO',
@@ -40168,10 +40175,16 @@ var TodoApp = __webpack_require__(421);
 
 var actions = __webpack_require__(92);
 var store = __webpack_require__(517).configure();
+var TodoAPI = __webpack_require__(516);
 
 store.subscribe(function () {
-  console.log('New State:', store.getState());
+  var state = store.getState();
+  console.log('New State:', state);
+  TodoAPI.setTodos(state.todos);
 });
+
+var initialTodos = TodoAPI.getTodos();
+store.dispatch(actions.addTodos(initialTodos));
 
 $(document).foundation();
 
@@ -53446,7 +53459,6 @@ var moment = __webpack_require__(0);
 var TodoList = __webpack_require__(512);
 var AddTodo = __webpack_require__(514);
 var TodoSearch = __webpack_require__(515);
-var TodoAPI = __webpack_require__(516);
 
 var TodoApp = function (_React$Component) {
   _inherits(TodoApp, _React$Component);
@@ -53454,67 +53466,12 @@ var TodoApp = function (_React$Component) {
   function TodoApp() {
     _classCallCheck(this, TodoApp);
 
-    var _this = _possibleConstructorReturn(this, (TodoApp.__proto__ || Object.getPrototypeOf(TodoApp)).call(this));
-
-    _this.state = {
-      todos: TodoAPI.getTodos(),
-      showCompleted: false,
-      searchText: ''
-    };
-    _this.handleSearch = _this.handleSearch.bind(_this);
-    _this.handleAddTodo = _this.handleAddTodo.bind(_this);
-    _this.handleToggle = _this.handleToggle.bind(_this);
-    return _this;
+    return _possibleConstructorReturn(this, (TodoApp.__proto__ || Object.getPrototypeOf(TodoApp)).apply(this, arguments));
   }
 
   _createClass(TodoApp, [{
-    key: 'componentDidUpdate',
-    value: function componentDidUpdate() {
-      TodoAPI.setTodos(this.state.todos);
-    }
-  }, {
-    key: 'handleSearch',
-    value: function handleSearch(showCompleted, searchText) {
-      this.setState({
-        showCompleted: showCompleted,
-        searchText: searchText.toLowerCase()
-      });
-    }
-  }, {
-    key: 'handleAddTodo',
-    value: function handleAddTodo(text) {
-      this.setState(function (previousState) {
-        return previousState.todos.push({
-          id: uuid(),
-          text: text,
-          completed: false,
-          createdAt: moment().unix(),
-          completedAt: undefined
-        });
-      });
-    }
-  }, {
-    key: 'handleToggle',
-    value: function handleToggle(id) {
-      var updatedTodos = this.state.todos.map(function (todo) {
-        if (todo.id === id) {
-          todo.completed = !todo.completed;
-          todo.completedAt = todo.completed ? moment().unix() : undefined;
-        }
-      });
-
-      this.setState(updatedTodos);
-    }
-  }, {
     key: 'render',
     value: function render() {
-      var _state = this.state,
-          todos = _state.todos,
-          showCompleted = _state.showCompleted,
-          searchText = _state.searchText;
-
-      var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
-
       return React.createElement(
         'div',
         null,
@@ -53532,7 +53489,7 @@ var TodoApp = function (_React$Component) {
             React.createElement(
               'div',
               { className: 'container' },
-              React.createElement(TodoSearch, { onSearch: this.handleSearch }),
+              React.createElement(TodoSearch, null),
               React.createElement(TodoList, null),
               React.createElement(AddTodo, null)
             )
@@ -64208,6 +64165,8 @@ var todosReducer = exports.todosReducer = function todosReducer() {
         createdAt: moment().unix(),
         completedAt: undefined
       }]);
+    case 'ADD_TODOS':
+      return [].concat(_toConsumableArray(state), _toConsumableArray(action.todos));
     case 'TOGGLE_TODO':
       return state.map(function (todo) {
         if (todo.id === action.id) {
